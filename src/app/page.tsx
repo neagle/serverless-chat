@@ -85,14 +85,13 @@ export default function Home() {
         "min-h-screen",
         "flex-col",
         "items-flex-start",
-        "md:items-center",
+        "max-w-[800px]",
         "md:p-24",
+        "md:mx-auto",
       ].join(" ")}
     >
       <h1 className="text-2xl flex-grow-0 p-5">Serverless Chat</h1>
-      {!username && (
-        <Username setUsername={setUsername} className={["p-5"].join(" ")} />
-      )}
+      {!username && <Username setUsername={setUsername} className="p-5" />}
       {username && (
         <>
           <ChatBox
@@ -100,8 +99,7 @@ export default function Home() {
             className={[
               "chat",
               "max-h-[300px]",
-              "w-full", // full width on mobile
-              "md:w-[400px]", // fixed width on desktop
+              "w-full",
               "border-t-2",
               "border-b-2",
               "md:border-2", // full border on desktop only
@@ -117,9 +115,9 @@ export default function Home() {
         <a href="https://ably.com/">Ably</a>.
       </div>
       <footer className="text-gray-500 p-5">
-        <ul className="flex">
+        <ul className="inline-bullets">
           <li>
-            Created by <a href="https://nateeagle.com">Nate Eagle</a> &bull;
+            Created by <a href="https://nateeagle.com">Nate Eagle</a>
           </li>
           <li className="ml-1">
             <a href="https://github.com/neagle/serverless-chat">

@@ -14,7 +14,7 @@ const Username = ({
   };
   return (
     <div {...rest}>
-      <label className="p-2">
+      <label>
         Username:
         <input
           autoFocus={true}

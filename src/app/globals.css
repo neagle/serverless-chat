@@ -33,3 +33,19 @@ a {
 a:hover {
   @apply text-blue-700;
 }
+
+.inline-bullets {
+  @apply flex flex-col sm:flex-row;
+}
+
+.inline-bullets li {
+}
+
+.inline-bullets li::after {
+  content: "•";
+  @apply ml-2 mr-1;
+}
+
+.inline-bullets li:last-of-type::after {
+  content: "";
+}
