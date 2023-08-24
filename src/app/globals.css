@@ -25,3 +25,11 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+a {
+  @apply text-blue-500 underline;
+}
+
+a:hover {
+  @apply text-blue-700;
+}

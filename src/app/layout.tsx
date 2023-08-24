@@ -1,11 +1,11 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Hanken_Grotesk } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const hankenGrotesque = Hanken_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Chat with Serverless Websockets",
+  title: "Serverless Chat",
   description: "A simple chat server using Server-Sent Events (SSE)",
 };
 
@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={hankenGrotesque.className}>{children}</body>
     </html>
   );
 }

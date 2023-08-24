@@ -31,8 +31,6 @@ export default function Home() {
 
       await ablyClient.connection.once("connected");
 
-      console.log("Ably client connected");
-
       addMessage({
         username: "Server",
         text: "Connected to chat! ⚡️",
@@ -41,7 +39,6 @@ export default function Home() {
       });
 
       channel = ablyClient.channels.get("chat");
-      console.log("Channel", channel);
 
       await channel.subscribe("message", (message: Ably.Types.Message) => {
         console.log("Message received", message);
@@ -82,20 +79,55 @@ export default function Home() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <h1 className="text-2xl flex-grow-0 mb-4">
-        Chat with Serverless Websockets
-      </h1>
-      {!username && <Username setUsername={setUsername} />}
+    <main
+      className={[
+        "flex",
+        "min-h-screen",
+        "flex-col",
+        "items-flex-start",
+        "md:items-center",
+        "md:p-24",
+      ].join(" ")}
+    >
+      <h1 className="text-2xl flex-grow-0 p-5">Serverless Chat</h1>
+      {!username && (
+        <Username setUsername={setUsername} className={["p-5"].join(" ")} />
+      )}
       {username && (
         <>
           <ChatBox
             messages={messages}
-            className="chat max-h-[300px] w-[400px] border-2 p-5 mb-5 overflow-y-scroll"
+            className={[
+              "chat",
+              "max-h-[300px]",
+              "w-full", // full width on mobile
+              "md:w-[400px]", // fixed width on desktop
+              "border-t-2",
+              "border-b-2",
+              "md:border-2", // full border on desktop only
+              "p-5",
+              "overflow-y-scroll",
+            ].join(" ")}
           />
-          <ChatInput submit={sendMessage} />
+          <ChatInput submit={sendMessage} className={["p-5"].join(" ")} />
         </>
       )}
+      <div className="p-5">
+        Chat using websockets on a serverless app in Vercel by using{" "}
+        <a href="https://ably.com/">Ably</a>.
+      </div>
+      <footer className="text-gray-500 p-5">
+        <ul className="flex">
+          <li>
+            Created by <a href="https://nateeagle.com">Nate Eagle</a> &bull;
+          </li>
+          <li className="ml-1">
+            <a href="https://github.com/neagle/serverless-chat">
+              View on Github
+            </a>
+          </li>
+        </ul>
+      </footer>
     </main>
   );
 }
