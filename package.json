@@ -12,7 +12,7 @@
     "@types/node": "20.5.2",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
-    "@vercel/kv": "^0.2.2",
+    "ably": "^1.2.43",
     "autoprefixer": "10.4.15",
     "dayjs": "^1.11.9",
     "eslint": "8.47.0",
