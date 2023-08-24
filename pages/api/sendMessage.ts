@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Message } from "../../types";
 import Ably from "ably";
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { username, message } = req.body;
   if (req.method === "POST" && typeof username && typeof message === "string") {
     try {
-      broadcastMessage({ username: username, text: message });
+      await broadcastMessage({ username: username, text: message });
       res.status(200).json({ status: `Message sent: ${username}: ${message}` });
     } catch (error) {
       res.status(500).json({ error });
