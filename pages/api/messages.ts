@@ -31,8 +31,10 @@ export const broadcastMessage = async (
   );
 
   await ably.connection.once("connected");
+  console.log("Connected to Ably");
 
   const channel = ably.channels.get("chat");
 
+  console.log("Publish", messageObject);
   channel.publish("message", messageObject);
 };

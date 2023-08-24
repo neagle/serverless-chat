@@ -31,6 +31,8 @@ export default function Home() {
 
       await ablyClient.connection.once("connected");
 
+      console.log("Ably client connected");
+
       addMessage({
         username: "Server",
         text: "Connected to chat! ⚡️",
@@ -39,8 +41,10 @@ export default function Home() {
       });
 
       channel = ablyClient.channels.get("chat");
+      console.log("Channel", channel);
 
       await channel.subscribe("message", (message: Ably.Types.Message) => {
+        console.log("Message received", message);
         addMessage(message.data as Message);
       });
     };
