@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Chat with SSE",
+  title: "Chat with Serverless Websockets",
   description: "A simple chat server using Server-Sent Events (SSE)",
 };
 

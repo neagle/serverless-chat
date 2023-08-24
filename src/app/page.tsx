@@ -84,7 +84,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
       <h1 className="text-2xl flex-grow-0 mb-4">
-        Chat with Server-Sent Events (SSE)
+        Chat with Serverless Websockets
       </h1>
       {!username && <Username setUsername={setUsername} />}
       {username && (
