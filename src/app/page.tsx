@@ -4,25 +4,28 @@ import { useEffect, useState, useCallback } from "react";
 import { Message } from "../../types";
 import Username from "./Username";
 import ChatBox from "./ChatBox";
+import ConnectedUsers from "./ConnectedUsers";
 import ChatInput from "./ChatInput";
 import Ably from "ably";
 
 export default function Home() {
   const [messages, setMessages] = useState([] as Message[]);
   const [username, setUsername] = useState("");
+  const [presence, setPresence] = useState([] as Ably.Types.PresenceMessage[]);
+  const [channel, setChannel] =
+    useState<Ably.Types.RealtimeChannelPromise | null>(null);
 
   const addMessage = (message: Message) => {
     setMessages((prevMessages) =>
       [...prevMessages, message]
-        // only keep the most recent 20 messages
-        .splice(-20)
+        // limit the history length
+        .splice(-50)
     );
   };
 
   // Initialize Ably client and subscribe to messages
   useEffect(() => {
     let ablyClient: Ably.Types.RealtimePromise;
-    let channel: Ably.Types.RealtimeChannelPromise;
 
     const init = async () => {
       ablyClient = new Ably.Realtime.Promise({
@@ -38,11 +41,44 @@ export default function Home() {
         date: new Date(),
       });
 
-      channel = ablyClient.channels.get("chat");
+      const chatChannel = ablyClient.channels.get("chat");
+      setChannel(chatChannel);
 
-      await channel.subscribe("message", (message: Ably.Types.Message) => {
+      // Set up channel listeners
+      const initialPresence = await chatChannel.presence.get();
+      setPresence(initialPresence as Ably.Types.PresenceMessage[]);
+
+      // Incoming messages
+      await chatChannel.subscribe("message", (message: Ably.Types.Message) => {
         console.log("Message received", message);
         addMessage(message.data as Message);
+      });
+
+      // Incoming users
+      await chatChannel.presence.subscribe("enter", (member) => {
+        setPresence((prevPresence) => [...prevPresence, member]);
+        addMessage({
+          username: "Server",
+          text: `${member.data.username} has entered the chat.`,
+          type: "notification",
+          date: new Date(),
+        });
+      });
+
+      // Outgoing users
+      await chatChannel.presence.subscribe("leave", (member) => {
+        setPresence((prevPresence) => {
+          const newPresence = prevPresence.filter(
+            (m) => m.connectionId !== member.connectionId
+          );
+          return newPresence;
+        });
+        addMessage({
+          username: "Server",
+          text: `${member.data.username} has left the chat.`,
+          type: "notification",
+          date: new Date(),
+        });
       });
     };
 
@@ -54,10 +90,29 @@ export default function Home() {
         channel.unsubscribe();
       }
       if (ablyClient) {
-        ablyClient.close();
+        try {
+          ablyClient.close();
+        } catch (e) {
+          console.error("Failed to close ablyClient", e);
+        }
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (username && channel) {
+      // This is when we tell Ably our username
+      channel.presence.enter({ username });
+      window.addEventListener("beforeunload", () => channel.presence.leave());
+    }
+
+    return () => {
+      window.removeEventListener(
+        "beforeunload",
+        () => channel && channel.presence.leave()
+      );
+    };
+  }, [username, channel]);
 
   const sendMessage = useCallback(
     async (text: string) => {
@@ -94,6 +149,7 @@ export default function Home() {
       {!username && <Username setUsername={setUsername} className="p-5" />}
       {username && (
         <>
+          <ConnectedUsers users={presence} className={["p-5"].join(" ")} />
           <ChatBox
             messages={messages}
             className={[
@@ -107,12 +163,16 @@ export default function Home() {
               "overflow-y-scroll",
             ].join(" ")}
           />
-          <ChatInput submit={sendMessage} className={["p-5"].join(" ")} />
+          <ChatInput
+            submit={sendMessage}
+            className={["p-5", "max-w-[800px]"].join(" ")}
+          />
         </>
       )}
       <div className="p-5">
-        Chat using websockets on a serverless app in Vercel by using{" "}
-        <a href="https://ably.com/">Ably</a>.
+        Chat using websockets on a serverless app in{" "}
+        <a href="https://vercel.com">Vercel</a> by using{" "}
+        <a href="https://ably.com">Ably</a>.
       </div>
       <footer className="text-gray-500 p-5">
         <ul className="inline-bullets">

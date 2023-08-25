@@ -6,6 +6,7 @@ type ChatInputProps = {
 
 const ChatInput = ({
   submit,
+  className = "",
   ...rest
 }: ChatInputProps & React.HTMLProps<HTMLDivElement>) => {
   const [text, setText] = useState("");
@@ -24,10 +25,10 @@ const ChatInput = ({
   );
 
   return (
-    <div {...rest}>
+    <div {...rest} className={`flex ${className}`}>
       <input
         autoFocus={true}
-        className="text-black p-2 border-2 border-black"
+        className="text-black p-2 border-2 border-black flex-grow"
         type="text"
         value={text}
         onChange={(event) => setText(event.target.value)}

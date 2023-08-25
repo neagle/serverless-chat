@@ -28,10 +28,13 @@ const ChatBox = ({
         <li className={`chat__message chat__message--type-${type}`} key={i}>
           <span className="chat__message__date text-gray-500 mr-1">
             {dayjs(date).format("HH:mm:ss")}
+            {username.toLowerCase() === "server" && ":"}
           </span>
-          <span className="chat__message__username text-gray-500 mr-1">
-            {username}:
-          </span>
+          {username.toLowerCase() !== "server" && (
+            <span className="chat__message__username text-gray-500 mr-1">
+              {username}:
+            </span>
+          )}
           <span
             className={`chat__message__text ${
               type === "notification" ? "text-gray-500" : ""
