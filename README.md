@@ -1,3 +1,13 @@
+# Serverless Chat
+
+This is a proof-of-concept chat intended to show how to integrate a serverless app (this one uses NextJS on Vercel) with Ably, which provides websockets as a service.
+
+All you should need to get it to work is to create an Ably account and app and set an `ABLY_API_KEY` value in your `.env` file, for local development. (And if you deploy to Vercel or anywhere else, you'll need to set the same value there.)
+
+Then follow the instructions below for running the app.
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
